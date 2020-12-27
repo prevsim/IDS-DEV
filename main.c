@@ -3,30 +3,47 @@
 
 struct ids_rule
 {
-        const char action[6];
+        char action[6];
         char protocol[6];
-        const char shost[IP_ADDR_LEN_STR];
-        const char sport[5];
-        const char direction[3];
-        const char dhost[IP_ADDR_LEN_STR];
-        const char dport[5];
+        char shost[IP_ADDR_LEN_STR];
+        char sport[5];
+        char direction[3];
+        char dhost[IP_ADDR_LEN_STR];
+        char dport[5];
         char msg[50];
         char content[50];
 } typedef Rule;
 
-void read_rules(FILE * file, Rule *rules_ds, int count)
+
+void read_rules(FILE * file, Rule *rules_ds)
 {
         file = fopen("ids.rules", "r");
-        int current_line = 0;
-        while(fgets(current_line,200,file))
+        int line = 0;
+        char chain[200];
+        while(fgets(chain,200,file) != NULL)
         {
-                sscanf(str, "%s %s %s %s %s %s %s %s %s (%[^])", rules_ds[current_line].action, rules_ds[current_line].protocol, rules_ds[current_line].shost,rules_ds[current_line].sport,
-                rules_ds[current_line].direction, rules_ds[current_line].dhost, rules_ds[current_line].dport, rules_ds[current_line].msg, rules_ds[current_line].content);
-                printf("Protocole = %s\n", rules_ds->protocol);
+                sscanf(chain, "%s %s %s %s %s %s %s (%[^)])", rules_ds[line].action, rules_ds[line].protocol, rules_ds[line].shost,rules_ds[line].sport,
+                rules_ds[line].direction, rules_ds[line].dhost, rules_ds[line].dport, rules_ds[line].content);
+                printf("content %s\n",rules_ds[line].content);
+                printf("Protocole = %s\n", rules_ds[line].protocol);
+                int size_content = strlen(rules_ds[line].content);
+
+                char delim[] ="\"";
+                char *separation = strtok(rules_ds[line].content,delim);
+
+                while (separation != NULL)
+                {
+                        printf("Separation %s\n ",separation);
+                        separation = strtok(NULL,delim);
+                }
+                
+                line ++;
         }
         
         
         fclose(file);
+       
+        
         
         /*const struct option_trame *trame;
 
@@ -49,7 +66,21 @@ void rule_matcher(Rule *rules_ds, ETHER_Frame *frame)
         */
 }
 
-
+int count_line(FILE * file){
+        char line[100];
+        int count = 0;
+        file = fopen("ids.rules","r");
+        if(file == NULL){
+                printf("Erreur lors de l'ouverture du fichier\n");
+                fclose(file);
+                return 0;
+        }
+        while(fgets(line,100,file) != NULL){
+                count ++;
+        }
+        fclose(file);
+        return count;       
+}
 void my_packet_handler(
         u_char *args,
         const struct pcap_pkthdr *header,
@@ -59,7 +90,7 @@ void my_packet_handler(
 {
         ETHER_Frame custom_frame;
         populate_packet_ds(header, packet, &custom_frame);
-        read_rules()
+        
 
 
 
@@ -68,9 +99,12 @@ void my_packet_handler(
 
 int main(int argc, char *argv[]) 
 {
-
+        FILE * file;
         char *device = "eth0";
         char error_buffer[PCAP_ERRBUF_SIZE];
+        int count = count_line(file);
+        Rule rules_ds[count];
+        read_rules(file,rules_ds);
         pcap_t *handle;
 
         handle = pcap_create(device,error_buffer);

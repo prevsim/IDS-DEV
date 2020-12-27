@@ -15,6 +15,9 @@
 #define TCP_PROTOCOL 6
 
 #define ERROR -1
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
 
 /* Ethernet header */
 struct sniff_ethernet 
