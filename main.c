@@ -3,10 +3,31 @@
 
 struct ids_rule
 {
+        const char action[6];
+        char protocol[6];
+        const char shost[IP_ADDR_LEN_STR];
+        const char sport[5];
+        const char direction[3];
+        const char dhost[IP_ADDR_LEN_STR];
+        const char dport[5];
+        char msg[50];
+        char content[50];
 } typedef Rule;
 
 void read_rules(FILE * file, Rule *rules_ds, int count)
 {
+        file = fopen("ids.rules", "r");
+        int current_line = 0;
+        while(fgets(current_line,200,file))
+        {
+                sscanf(str, "%s %s %s %s %s %s %s %s %s (%[^])", rules_ds[current_line].action, rules_ds[current_line].protocol, rules_ds[current_line].shost,rules_ds[current_line].sport,
+                rules_ds[current_line].direction, rules_ds[current_line].dhost, rules_ds[current_line].dport, rules_ds[current_line].msg, rules_ds[current_line].content);
+                printf("Protocole = %s\n", rules_ds->protocol);
+        }
+        
+        
+        fclose(file);
+        
         /*const struct option_trame *trame;
 
         trame = (struct option_trame*)(packet_body);
@@ -38,6 +59,9 @@ void my_packet_handler(
 {
         ETHER_Frame custom_frame;
         populate_packet_ds(header, packet, &custom_frame);
+        read_rules()
+
+
 
 
 }
