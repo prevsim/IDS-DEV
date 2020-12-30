@@ -15,6 +15,9 @@
 #define TCP_PROTOCOL 6
 
 #define ERROR -1
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
 
 /* Ethernet header */
 struct sniff_ethernet 
@@ -103,6 +106,7 @@ struct custom_ip
         char source_ip[IP_ADDR_LEN_STR];
         char destination_ip[IP_ADDR_LEN_STR];
         int protocol;
+        int payload_type;
         TCP_Segment tcp_data;
         UDP_Packet udp_data;
 

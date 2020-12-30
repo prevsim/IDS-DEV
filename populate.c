@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "populate.h"
 
+
 void generate_ip(unsigned int ip, char ip_addr[])
 {
     unsigned char bytes[4];
@@ -89,6 +90,7 @@ int populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, E
                 if((int)ip->ip_p==UDP_PROTOCOL)
                 {
                         printf("\nUDP Handling\n");
+                        custom_packet.payload_type = UDP_PROTOCOL;
                         udp = (struct sniff_udp*)(packet + SIZE_ETHERNET + size_ip);
                         UDP_Packet custom_segment;
 
@@ -107,6 +109,7 @@ int populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, E
                 {
                         printf("\nTCP Handling\n");
                         tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
+                        custom_packet.payload_type = TCP_PROTOCOL;
                         TCP_Segment custom_segment;
 
                         size_tcp = TH_OFF(tcp)*4;
