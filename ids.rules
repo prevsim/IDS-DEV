@@ -1,0 +1,4 @@
+alert http any any -> any any (msg:"shell attack"; content:"malware.exe";)
+alert tcp  any any -> any any (msg:"backdoor attack";)
+alert udp any any -> 192.168.52.3 any (msg:"UDP traffic bind port is forbidden";)
+alert ftp any any -> any any (msg:"Unsecure protocol use detected";)
