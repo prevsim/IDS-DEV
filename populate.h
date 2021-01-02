@@ -80,7 +80,6 @@ struct sniff_udp {
         u_short udp_checksum;   /*tout ça = 8 bytes*/
 };
 
-
 struct custom_udp
 {
         int source_port;

@@ -56,8 +56,6 @@ void read_rules(FILE * file, Rule *rules_ds)
                         separation = strtok(NULL,delim);
                         
                 }
-                printf("3 %s\n",rules_ds[line].msg);
-                printf("4 %s\n",rules_ds[line].content);
                 
                 line ++;
         }
@@ -110,6 +108,15 @@ void rule_tcp(Rule rule_tcp,ETHER_Frame *frame){
                 syslog(LOG_ALERT,"%s",rule_tcp.msg);
         }
 }
+void rule_ftp(Rule rule_ftp, ETHER_Frame *frame){
+        if(frame->data.payload_type = TCP_PROTOCOL){
+                if(frame->data.tcp_data.source_port == 20 || frame->data.tcp_data.source_port == 21 || frame->data.tcp_data.destination_port == 20 || frame->data.tcp_data.destination_port == 21){
+                        if(condition_interminable_tcp(rule_ftp, frame) == 1){
+                                syslog(LOG_ALERT, "%s", rule_ftp.msg);
+                        }
+                }
+        }
+}
 
 
 void rule_matcher(Rule *rules_ds, ETHER_Frame *frame,int rules_ds_size)
@@ -129,6 +136,9 @@ void rule_matcher(Rule *rules_ds, ETHER_Frame *frame,int rules_ds_size)
               else if (strcmp(rules_ds[i].protocol,"udp") == 0){
                       rule_udp(rules_ds[i],frame);
               } 
+              else if (strcmp(rules_ds[i].protocol,"ftp") == 0){
+                      rule_ftp(rules_ds[i], frame);
+              }
               
       }
           
